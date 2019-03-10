@@ -1,0 +1,28 @@
+#! /usr/bin/env sh
+
+ARCHIVE="$1"
+
+if [ $# -gt 1 ]]; then
+    FW_IMG="$2"
+else
+    FW_IMG="firmware.bin"
+fi
+
+unzip $ARCHIVE
+
+echo "FLASHING FIRMWARE..."
+
+esptool.py \
+  --chip esp32 \
+  --port "/dev/ttyUSB0" \
+  --baud 115200 \
+  --before "default_reset" \
+  --after "hard_reset" \
+  write_flash \
+  -z \
+  --flash_mode "dio" \
+  --flash_freq "40m" \
+  --flash_size detect \
+  0x1000 bootloader.bin \
+  0x10000 $FW_IMG \
+  0x8000 partitions_singleapp.bin
