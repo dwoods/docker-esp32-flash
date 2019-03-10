@@ -5,9 +5,10 @@ RUN pip install pyserial esptool
 RUN mkdir /app
 
 ADD flash /app/flash
+RUN chmod +x /app/flash
 
 WORKDIR /app
 
-ENTRYPOINT [ "flash" ]
+ENTRYPOINT [ "/app/flash" ]
 
 CMD [ "/data/firmware.zip" ]

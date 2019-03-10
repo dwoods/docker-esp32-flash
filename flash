@@ -2,19 +2,25 @@
 
 ARCHIVE="$1"
 
-if [ $# -gt 1 ]]; then
+if [ $# -gt 1 ]; then
     FW_IMG="$2"
 else
     FW_IMG="firmware.bin"
 fi
 
-unzip $ARCHIVE
+if [ $# -gt 2 ]; then
+    DEV="$3"
+else
+    DEV="/dev/ttyUSB0"
+fi
+
+unzip /data/$ARCHIVE
 
 echo "FLASHING FIRMWARE..."
 
 esptool.py \
   --chip esp32 \
-  --port "/dev/ttyUSB0" \
+  --port "$DEV" \
   --baud 115200 \
   --before "default_reset" \
   --after "hard_reset" \
